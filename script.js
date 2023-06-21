@@ -10,6 +10,21 @@ let pontos = 0;
 let tempo = 0;
 let timer = null;
 
+let pontuacao = {
+  name: Receptor,
+  pontos: pontos
+};
+
+fetch("http://localhost:5050/score", {
+  method: "POST",
+  body: JSON.stringify(pontuacao),
+  headers: { "Content-type": "application/json; charset=UTF-8" }
+})
+  .then(response => response.json())
+  .then(json => console.log(json))
+  .catch(error => console.log(error));
+
+
 function iniciaJogo() {
   pontos = 0;
   tempo = tempo_inicial;
@@ -27,7 +42,7 @@ function iniciaJogo() {
   }
   timer = setInterval(contaTempo, 1000);
 
-  function criarElemento(nome, ponto) {
+  const criarElemento= function(nome, ponto) {
     const container = document.getElementById("placar");
     const name = document.createElement("p");
     const ponta = document.createElement("p");
@@ -35,8 +50,8 @@ function iniciaJogo() {
     name.textContent = nome;
     ponta.textContent = ponto;
 
-    container.appendChild(name);
-    container.appendChild(ponta);
+    container.appendChild(name + ": " + ponto)
+    
   }
 
   fetch("http://localhost:5050/score")
@@ -56,19 +71,9 @@ function iniciaJogo() {
       console.log(error);
     });
 
-  let pontuacao = {
-    name: Receptor,
-    pontos: pontos
-  };
 
-  fetch("http://localhost:5050/score", {
-    method: "POST",
-    body: JSON.stringify(pontuacao),
-    headers: { "Content-type": "application/json; charset=UTF-8" }
-  })
-    .then(response => response.json())
-    .then(json => console.log(json))
-    .catch(error => console.log(error));
+
+  
 }
 
 function pegaMoeda(moeda) {
